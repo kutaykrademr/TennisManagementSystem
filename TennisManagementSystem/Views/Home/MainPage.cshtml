@@ -1,0 +1,46 @@
+﻿@model List<Helpers.CompanySettingsDto>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>IP</th>
+                        <th>M1</th>
+                        <th>M2</th>
+                        <th>M3</th>
+                        <th>M4</th>
+                        <th>M5</th>
+                        <th>M6</th>
+                        <th>Kort Sayısı</th>
+                        <th>Foto</th>
+                        <th>Şirket</th>
+                        <th>Kullanım Bitiş Tarihi</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.SunucuIp</td>
+                            <td>@item.M1</td>
+                            <td>@item.M2</td>
+                            <td>@item.M3</td>
+                            <td>@item.M4</td>
+                            <td>@item.M5</td>
+                            <td>@item.M6</td>
+                            <td>@item.CourtCount</td>
+                            <td>@item.PhotoUrl</td>
+                            <td>@item.CompanyName</td>
+                            <td>@item.ExpirationDate</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

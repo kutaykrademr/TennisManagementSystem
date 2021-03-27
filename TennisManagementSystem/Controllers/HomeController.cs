@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Helpers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,27 +12,35 @@ namespace TennisManagementSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        [Route("")]
+        [Route("Index")]
         public IActionResult Index()
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        [Route("Anasayfa")]
+        public IActionResult MainPage()
         {
-            return View();
+            List<CompanySettingsDto> model = new List<CompanySettingsDto>();
+
+            model = Helpers.Serializers.DeserializeJson<List<CompanySettingsDto>>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/GetCompanySettings"));
+
+            return View(model);
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet]
+        public JsonResult LoginUser(string user,string pass)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+
+            AdminDto model = new AdminDto();
+
+            model = Helpers.Serializers.DeserializeJson<AdminDto>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/Getuser?user=" + user + "&pass=" + pass ));
+
+            if (model == null)
+                return Json("false");
+            else
+                return Json("true");
         }
     }
 }

@@ -16,6 +16,16 @@ namespace TennisManagementSystem
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            try
+            {
+                Mutuals.ApiUrl = Configuration.GetValue<string>("apiUrl");
+
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public IConfiguration Configuration { get; }

@@ -18,6 +18,23 @@ namespace TennisManagementSystemApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            try
+            {
+                Configuration.GetSection("dbConnectionStrings").Bind(Mutuals.DbConnStrings);
+
+                Workers.LogWorker.StartTimers();
+                //Workers.MainWorker.StartTimers();
+
+                Mutuals.monitizer.startSuccesful = 1;
+                Mutuals.monitizer.AddLog(Mutuals.monitizer.appName + " application started successfully.");
+            }
+            catch (Exception ex)
+            {
+                Mutuals.monitizer.startSuccesful = -1;
+                Mutuals.monitizer.AddLog("Configuration string read error.");
+                Mutuals.monitizer.AddException(ex);
+            }
         }
 
         public IConfiguration Configuration { get; }
@@ -46,6 +63,13 @@ namespace TennisManagementSystemApi
             {
                 endpoints.MapControllers();
             });
+
+            DefaultFilesOptions DefaultFile = new DefaultFilesOptions();
+            DefaultFile.DefaultFileNames.Clear();
+            DefaultFile.DefaultFileNames.Add("Index.html");
+            app.UseDefaultFiles(DefaultFile);
+            app.UseStaticFiles();
+
         }
     }
 }
