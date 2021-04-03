@@ -9,7 +9,6 @@ namespace TennisManagementSystemApi.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-
     public class InfoController : Controller
     {
         [HttpGet("GetAppInfo", Name = "GetAppInfo")]
