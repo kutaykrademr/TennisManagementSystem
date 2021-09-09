@@ -19,6 +19,7 @@ namespace TennisManagementSystem.Controllers
         {
             return View();
         }
+
         [Route("Anasayfa")]
         public IActionResult MainPage()
         {
@@ -29,7 +30,7 @@ namespace TennisManagementSystem.Controllers
             return View(model);
         }
 
-        [HttpGet]
+    
         public JsonResult LoginUser(string user,string pass)
         {
 
@@ -38,6 +39,30 @@ namespace TennisManagementSystem.Controllers
             model = Helpers.Serializers.DeserializeJson<AdminDto>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/Getuser?user=" + user + "&pass=" + pass ));
 
             if (model == null)
+                return Json("false");
+            else
+                return Json("true");
+        }
+
+   
+        public JsonResult GetCheckList(List<string> trueList)
+        {
+            List<CompanySettingsDto> model = new List<CompanySettingsDto>();
+
+            string trueStr = "";
+            foreach (var item in trueList)
+            {
+                trueStr += item + "-";
+            }
+
+            trueStr = trueStr.Remove(trueStr.Length - 1);
+
+          
+
+            model = Helpers.Serializers.DeserializeJson<List<CompanySettingsDto>>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/GetCheckList?trueStr=" + trueStr));
+
+            if (model == null)
+
                 return Json("false");
             else
                 return Json("true");
