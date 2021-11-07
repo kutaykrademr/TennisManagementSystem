@@ -43,40 +43,69 @@ namespace TennisManagementSystemApi.Controllers
         [HttpGet("GetCheckList", Name = "GetCheckList")]
         public JsonResult GetCheckList(string trueStr)
         {
-          
+
             List<CompanySetting> model = new List<CompanySetting>();
             List<int> idList = new List<int>();
             List<string> activeAuth = new List<string>();
 
-            List<string> trueList = new List<string>(trueStr.Split("-").ToArray());
-
-            model = db.CompanySettings.ToList();
-
-
-            foreach (var item in model)
+            if (trueStr == null)
             {
-                idList.Add(item.Id);
-            }
 
-            foreach (var item in idList)
-            {
-                activeAuth.Clear();
+                model = db.CompanySettings.ToList();
 
-                for (int x = 0; x < trueList.Count(); x++)
+                foreach (var item in model)
                 {
-                    if (item == Convert.ToInt32(trueList[x].Split("_")[1]))
-                    {
-                        activeAuth.Add(trueList[x].Split("_")[0]);
-                    }
+                    idList.Add(item.Id);
                 }
 
-                CompanySetting cs = db.CompanySettings.FirstOrDefault(x => x.Id == item);
-
-                try
+                foreach (var item2 in idList)
                 {
+                    CompanySetting cs = db.CompanySettings.FirstOrDefault(x => x.Id == item2);
+                    cs.M1 = false;
+                    cs.M2 = false;
+                    cs.M3 = false;
+                    cs.M4 = false;
+                    cs.M5 = false;
+                    cs.M6 = false;
 
-                    if (cs != null)
+                    db.Update(cs);
+                    db.SaveChanges();
+
+                    
+                }
+            }
+
+            else
+            {
+                List<string> trueList = new List<string>(trueStr.Split("-").ToArray());
+
+
+
+                model = db.CompanySettings.ToList();
+
+
+                foreach (var item in model)
+                {
+                    idList.Add(item.Id);
+                }
+
+                foreach (var item in idList)
+                {
+                    activeAuth.Clear();
+
+                    for (int x = 0; x < trueList.Count(); x++)
                     {
+                        if (item == Convert.ToInt32(trueList[x].Split("_")[1]))
+                        {
+                            activeAuth.Add(trueList[x].Split("_")[0]);
+                        }
+                    }
+
+                    CompanySetting cs = db.CompanySettings.FirstOrDefault(x => x.Id == item);
+
+                    try
+                    {
+
                         for (int i = 0; i < activeAuth.Count; i++)
                         {
 
@@ -113,18 +142,20 @@ namespace TennisManagementSystemApi.Controllers
                         }
 
                     }
-                   
-                }
-                catch (Exception ex)
-                {
+                    catch (Exception ex)
+                    {
 
-                    Mutuals.monitizer.AddException(ex);
+                        Mutuals.monitizer.AddException(ex);
+                    }
+
                 }
 
+                return Json(model);
             }
+
+            model = db.CompanySettings.ToList();
 
             return Json(model);
         }
-
     }
 }

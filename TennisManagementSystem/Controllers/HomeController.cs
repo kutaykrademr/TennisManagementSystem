@@ -50,19 +50,24 @@ namespace TennisManagementSystem.Controllers
             List<CompanySettingsDto> model = new List<CompanySettingsDto>();
 
             string trueStr = "";
-            foreach (var item in trueList)
+
+
+            if (trueList.Count != 0)
             {
-                trueStr += item + "-";
+                 trueStr = "";
+                foreach (var item in trueList)
+                {
+                    trueStr += item + "-";
+                }
+
+                trueStr = trueStr.Remove(trueStr.Length - 1);
             }
-
-            trueStr = trueStr.Remove(trueStr.Length - 1);
-
+          
           
 
             model = Helpers.Serializers.DeserializeJson<List<CompanySettingsDto>>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/GetCheckList?trueStr=" + trueStr));
 
             if (model == null)
-
                 return Json("false");
             else
                 return Json("true");
