@@ -44,7 +44,32 @@ namespace TennisManagementSystem.Controllers
                 return Json("true");
         }
 
-   
+        public JsonResult AddClub(string compIp, string compName , DateTime compDate)
+        {
+
+            AdminDto model = new AdminDto();
+
+            model = Helpers.Serializers.DeserializeJson<AdminDto>(Helpers.Request.Get(Mutuals.ApiUrl + "Web/AddClub?compIp=" + compIp + "&compName=" + compName + "&compDate=" + compDate));
+
+            if (model == null)
+                return Json("false");
+            else
+                return Json("true");
+        }
+
+        public JsonResult FirstUser(string compId, string username, string password)
+        {
+
+            AdminDto model = new AdminDto();
+
+            model = Helpers.Serializers.DeserializeJson<AdminDto>(Helpers.Request.Get("https://localhost:44311/" + "AdminHome/NewRegister?compId=" + compId + "&username=" + username + "&password=" + password + "&boss=" + true + "&role=" + "Yönetici"));
+
+            if (model == null) 
+                return Json("false");
+            else
+                return Json("true");
+        }
+
         public JsonResult GetCheckList(List<string> trueList)
         {
             List<CompanySettingsDto> model = new List<CompanySettingsDto>();

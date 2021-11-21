@@ -39,8 +39,31 @@ namespace TennisManagementSystemApi.Controllers
             return model;
         }
 
+        [HttpGet("AddClub", Name = "AddClub")]
+        public CompanySetting AddClub(string compIp, string compName, DateTime compDate)
+        {
+           CompanySetting model = new CompanySetting();
+            {
+                model.CompanyName = compName;
+                model.SunucuIp = compIp;
+                model.ExpirationDate = compDate;
+                model.M1 = false;
+                model.M2 = false;
+                model.M3 = false;
+                model.M4 = false;
+                model.M5 = false;
+                model.M6 = false;
+                model.CourtCount = 0;
+                model.PhotoUrl = "-";
 
-        [HttpGet("GetCheckList", Name = "GetCheckList")]
+                db.Add(model);
+                db.SaveChanges();
+            }
+            return model;
+        }
+
+      
+       [HttpGet("GetCheckList", Name = "GetCheckList")]
         public JsonResult GetCheckList(string trueStr)
         {
 

@@ -80,11 +80,12 @@
                 <th>Foto</th>
                 <th>Şirket</th>
                 <th>Kullanım Bitiş Tarihi</th>
+                <th>Kullanıcı Ekle</th>
 
                 <th>
                     <button type="button" class="btn btn-primary" onclick="saveChecked()">Kaydet </button>
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                        Launch demo modal
+                        Kulüp Ekle
                     </button>
 
                 </th>
@@ -214,6 +215,7 @@
                     <td>@item.PhotoUrl</td>
                     <td>@item.CompanyName</td>
                     <td>@item.ExpirationDate</td>
+                    <td><button id="@item.SunucuIp" type="button" class="btn btn-primary" onclick="addUser(this.id)">Kullanıcı Ekle </button></td>
 
                 </tr>
             }
@@ -222,13 +224,38 @@
     </table>
 </div>
 
+<div class="modal fade" id="addUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        
+            <div class="modal-body">
+                <div class="row">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="username" placeholder="Kullanıcı Adı" autocomplete="new-password">
+                    </div>
+                </div>
+
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="password" placeholder="Şifre" autocomplete="new-password">                
+                </div>
+
+                <p class="login-box-msg">Not: Şifre en az bir Büyük , Bir Küçük Harf , Sayı ve Karakter Gerektirir ve En az "7" Haneli Olmalıdır. </p>
+            </div>
+      
+            <div id="userOp" class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="saveUser(this.id)">Kaydet</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Kulüp Ekle</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -236,7 +263,7 @@
             <div class="modal-body">
                 <div>
                     <div class="form-group">
-                        <label class="col-form-label">Şirket Ip</label>
+                        <label class="col-form-label">Şirket Id</label>
                         <input type="text" id="compIp" class="form-control" autocomplete="new-password">
                     </div>
                 </div>
@@ -249,14 +276,14 @@
                 <div>
                     <div class="form-group">
                         <label class="col-form-label">Kullanım Bitiş Tarihi:</label>
-                        <input type="date" id="compFİnishDate" class="form-control" autocomplete="new-password">
+                        <input type="date" id="compFinishDate" class="form-control" autocomplete="new-password">
                     </div>
                 </div>
          
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Kapat</button>
+                <button type="button" class="btn btn-primary" onclick="addClub()">Kulüp Ekle</button>
             </div>
         </div>
     </div>
@@ -279,6 +306,79 @@
             url: '../Home/GetCheckList',
             cache: false,
             data: { "trueList": checkTrueList },
+            dataType: "json",
+            async: true,
+            success: function (res) {
+
+                if (res == "true") {
+
+                    alert("Başarılı");
+
+                    window.location.href = "Anasayfa"
+                }
+
+            },
+
+            error: function (textStatus, errorThrown) {
+                console.log(JSON.stringify(textStatus));
+                console.log(textStatus);
+            }
+        });
+    }
+
+    function addUser(id) {
+
+        $("#userOp button:nth-of-type(2)").attr("id", id);
+
+        $('#addUser').modal('toggle')
+     
+    }
+
+    function saveUser(id) {
+
+        debugger;
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var compId = id;
+
+        $.ajax({
+            type: "Get",
+            url: '../Home/FirstUser',
+            cache: false,
+            data: { "username": username, "password": password, "compId": compId },
+            dataType: "json",
+            async: true,
+            success: function (res) {
+
+                if (res == "true") {
+
+                    alert("Başarılı");
+
+                    window.location.href = "Anasayfa"
+                }
+
+            },
+
+            error: function (textStatus, errorThrown) {
+                console.log(JSON.stringify(textStatus));
+                console.log(textStatus);
+            }
+        });
+    }
+
+    function addClub() {
+
+        compIp = $("#compIp").val();
+        compName = $("#compName").val();
+        compDate = $("#compFinishDate").val();
+
+
+        $.ajax({
+            type: "Post",
+            url: '../Home/AddClub',
+            cache: false,
+            data: { "compIp": compIp, "compName": compName, "compDate": compDate },
             dataType: "json",
             async: true,
             success: function (res) {
